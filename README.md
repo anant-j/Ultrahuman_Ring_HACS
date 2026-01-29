@@ -1,3 +1,4 @@
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/anant)
 # Ultrahuman Ring
 
 This integration uses the official Ultrahuman Vision API to retrieve Ultrahuman AIR Ring information periodically and expose it in HomeAssistant through various sensors.
