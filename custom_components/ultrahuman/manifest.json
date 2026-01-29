@@ -1,0 +1,14 @@
+{
+    "domain": "ultrahuman",
+    "name": "Ultrahuman Sensors",
+    "version": "1.0.0",
+    "documentation": "https://github.com/anant-j/Ultrahuman_HACS",
+    "requirements": [
+        "aiohttp>=3.8.0"
+    ],
+    "dependencies": [],
+    "codeowners": [
+        "@anant-j"
+    ],
+    "config_flow": true
+}
