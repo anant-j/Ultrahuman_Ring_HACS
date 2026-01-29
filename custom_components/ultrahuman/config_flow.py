@@ -1,6 +1,8 @@
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
+import aiohttp
+from datetime import datetime
 
 DOMAIN = "ultrahuman"
 
