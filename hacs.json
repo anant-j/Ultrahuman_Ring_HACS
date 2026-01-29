@@ -1,7 +1,7 @@
 {
     "name": "Ultrahuman Ring",
     "content_in_root": false,
-    "homeassistant": "2023.9.0",
+    "homeassistant": "2025.2.4",
     "render_readme": true,
     "zip_release": false
 }
