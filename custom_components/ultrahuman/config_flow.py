@@ -1,51 +1,53 @@
-import voluptuous as vol
-from homeassistant import config_entries
-from homeassistant.core import HomeAssistant
-import aiohttp
-from datetime import datetime
+"""Config flow for Ultrahuman Ring integration."""
 
-DOMAIN = "ultrahuman"
+from typing import Any
+
+import voluptuous as vol
+
+from homeassistant import config_entries
+from homeassistant.data_entry_flow import FlowResult
+
+from .api import UltrahumanApiClient
+from .const import (
+    CONF_API_TOKEN,
+    CONF_UPDATE_INTERVAL,
+    DEFAULT_UPDATE_INTERVAL,
+    DOMAIN,
+)
+
 
 class UltrahumanConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Ultrahuman Ring Sensors."""
+    """Handle a config flow for Ultrahuman Ring."""
 
     VERSION = 1
 
-    async def async_step_user(self, user_input=None):
-        """Step when user initializes the integration via UI."""
-        errors = {}
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Handle the initial step."""
+        errors: dict[str, str] = {}
+
         if user_input is not None:
-            # Optional: validate API credentials
-            if await self._validate_credentials(user_input):
+            client = UltrahumanApiClient(user_input[CONF_API_TOKEN])
+            if await client.async_validate_token():
                 return self.async_create_entry(
                     title="Ultrahuman Ring",
-                    data=user_input
+                    data=user_input,
                 )
-            else:
-                errors["base"] = "invalid_credentials"
-
-        data_schema = vol.Schema({
-            vol.Required("api_token"): str
-        })
+            errors["base"] = "invalid_auth"
 
         return self.async_show_form(
             step_id="user",
-            data_schema=data_schema,
-            errors=errors
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        CONF_API_TOKEN,
+                    ): str,
+                    vol.Required(
+                        CONF_UPDATE_INTERVAL,
+                        default=DEFAULT_UPDATE_INTERVAL,
+                    ): vol.All(vol.Coerce(int), vol.Range(min=5, max=1440)),
+                }
+            ),
+            errors=errors,
         )
-
-    async def _validate_credentials(self, user_input: dict) -> bool:
-        """Optional: test if the API token works."""
-        import aiohttp
-        api_url = "https://partner.ultrahuman.com/api/v1/partner/daily_metrics"
-        api_token = user_input["api_token"]
-        headers = {"Authorization": api_token, "Accept": "application/json"}
-
-        today = datetime.now().strftime("%Y-%m-%d")
-        params = {"date": today}
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(api_url, headers=headers, params=params, timeout=10) as resp:
-                    return resp.status == 200
-        except Exception:
-            return False
