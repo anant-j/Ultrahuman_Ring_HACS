@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
-from datetime import timedelta
+from datetime import datetime, timedelta
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
@@ -68,6 +68,10 @@ class UltrahumanSensor(CoordinatorEntity, SensorEntity):
         self._metric = metric
         self._attr_name = metric.name
         self._attr_unique_id = f"{entry_id}_{metric.key}"
+        self._attr_icon = metric.icon
+        self._attr_device_class = metric.device_class
+        self._attr_state_class = metric.state_class
+        self._attr_native_unit_of_measurement = metric.native_unit
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -84,4 +88,13 @@ class UltrahumanSensor(CoordinatorEntity, SensorEntity):
             return None
 
         parser = UltrahumanDataParser(self.coordinator.data)
-        return parser.get_value(self._metric.key)
+        value = parser.get_value(self._metric.key)
+
+        # Convert ISO strings to datetime for timestamp device class
+        if self._attr_device_class == SensorDeviceClass.TIMESTAMP and isinstance(value, str):
+            try:
+                return datetime.fromisoformat(value)
+            except (ValueError, TypeError):
+                return None
+
+        return value

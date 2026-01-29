@@ -6,46 +6,57 @@ from dataclasses import dataclass
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
+from homeassistant.const import (
+    PERCENTAGE,
+    UnitOfTemperature,
+    UnitOfTime,
+)
+
 
 @dataclass(frozen=True)
 class UltrahumanMetric:
     key: str
     name: str
+    icon: str | None = None
+    device_class: SensorDeviceClass | None = None
+    state_class: SensorStateClass | None = None
+    native_unit: str | None = None
 
 
 # 🔑 SINGLE SOURCE OF TRUTH FOR ALL SENSORS
 METRICS: tuple[UltrahumanMetric, ...] = (
     # ---- Cardio ----
-    UltrahumanMetric("hr_last", "Heart Rate"),
-    UltrahumanMetric("night_rhr", "Night Resting HR"),
-    UltrahumanMetric("hrv_avg", "HRV"),
-    UltrahumanMetric("sleep_rhr", "Sleep RHR"),
-    UltrahumanMetric("spo2_avg", "SpO2"),
-    UltrahumanMetric("vo2_max", "VO2 Max"),
+    UltrahumanMetric("hr_last", "Heart Rate", "mdi:heart-pulse", None, SensorStateClass.MEASUREMENT, "bpm"),
+    UltrahumanMetric("night_rhr", "Night Resting HR", "mdi:heart", None, SensorStateClass.MEASUREMENT, "bpm"),
+    UltrahumanMetric("hrv_avg", "HRV", "mdi:heart-flash", None, SensorStateClass.MEASUREMENT, "ms"),
+    UltrahumanMetric("sleep_rhr", "Sleep RHR", "mdi:heart-minus", None, SensorStateClass.MEASUREMENT, "bpm"),
+    UltrahumanMetric("spo2_avg", "SpO2", "mdi:water-percent", None, SensorStateClass.MEASUREMENT, PERCENTAGE),
+    UltrahumanMetric("vo2_max", "VO2 Max", "mdi:lungs", None, SensorStateClass.MEASUREMENT, "mL/kg/min"),
 
     # ---- Sleep ----
-    UltrahumanMetric("sleep_score", "Sleep Score"),
-    UltrahumanMetric("total_sleep", "Total Sleep"),
-    UltrahumanMetric("sleep_start", "Sleep Start"),
-    UltrahumanMetric("sleep_end", "Sleep End"),
-    UltrahumanMetric("time_in_bed", "Time in Bed"),
-    UltrahumanMetric("sleep_efficiency", "Sleep Efficiency"),
+    UltrahumanMetric("sleep_score", "Sleep Score", "mdi:sleep", None, SensorStateClass.MEASUREMENT, None),
+    UltrahumanMetric("total_sleep", "Total Sleep", "mdi:bed-clock", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT, UnitOfTime.MINUTES),
+    UltrahumanMetric("sleep_start", "Sleep Start", "mdi:bed", SensorDeviceClass.TIMESTAMP, None, None),
+    UltrahumanMetric("sleep_end", "Sleep End", "mdi:bed-outline", SensorDeviceClass.TIMESTAMP, None, None),
+    UltrahumanMetric("time_in_bed", "Time in Bed", "mdi:bed-king", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT, UnitOfTime.MINUTES),
+    UltrahumanMetric("sleep_efficiency", "Sleep Efficiency", "mdi:percent", None, SensorStateClass.MEASUREMENT, PERCENTAGE),
 
     # ---- Recovery & Activity ----
-    UltrahumanMetric("recovery_index", "Recovery Index"),
-    UltrahumanMetric("movement_index", "Movement Index"),
-    UltrahumanMetric("active_minutes", "Active Minutes"),
-    UltrahumanMetric("steps", "Steps"),
-    UltrahumanMetric("calories", "Calories Burned"),
+    UltrahumanMetric("recovery_index", "Recovery Index", "mdi:battery-heart-variant", None, SensorStateClass.MEASUREMENT, None),
+    UltrahumanMetric("movement_index", "Movement Index", "mdi:run", None, SensorStateClass.MEASUREMENT, None),
+    UltrahumanMetric("active_minutes", "Active Minutes", "mdi:timer", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT, UnitOfTime.MINUTES),
+    UltrahumanMetric("steps", "Steps", "mdi:shoe-print", None, SensorStateClass.TOTAL_INCREASING, "steps"),
+    UltrahumanMetric("calories", "Calories Burned", "mdi:fire", None, SensorStateClass.TOTAL_INCREASING, "kcal"),
 
     # ---- Temperature & Stress ----
-    UltrahumanMetric("skin_temp", "Skin Temperature"),
-    UltrahumanMetric("temp_deviation", "Temperature Deviation"),
-    UltrahumanMetric("stress_score", "Stress Score"),
+    UltrahumanMetric("skin_temp", "Skin Temperature", "mdi:thermometer", SensorDeviceClass.TEMPERATURE, SensorStateClass.MEASUREMENT, UnitOfTemperature.CELSIUS),
+    UltrahumanMetric("temp_deviation", "Temperature Deviation", "mdi:thermometer-alert", SensorDeviceClass.TEMPERATURE, SensorStateClass.MEASUREMENT, UnitOfTemperature.CELSIUS),
+    UltrahumanMetric("stress_score", "Stress Score", "mdi:head-flash", None, SensorStateClass.MEASUREMENT, None),
 
     # ---- Readiness ----
-    UltrahumanMetric("readiness_score", "Readiness Score"),
-    UltrahumanMetric("body_battery", "Body Battery"),
+    UltrahumanMetric("readiness_score", "Readiness Score", "mdi:gauge", None, SensorStateClass.MEASUREMENT, None),
+    UltrahumanMetric("body_battery", "Body Battery", "mdi:battery-heart", None, SensorStateClass.MEASUREMENT, PERCENTAGE),
 )
 
 
