@@ -40,24 +40,16 @@ METRICS: tuple[UltrahumanMetric, ...] = (
     UltrahumanMetric("sleep_start", "Sleep Start", "mdi:bed", SensorDeviceClass.TIMESTAMP, None, None),
     UltrahumanMetric("sleep_end", "Sleep End", "mdi:bed-outline", SensorDeviceClass.TIMESTAMP, None, None),
     UltrahumanMetric("time_in_bed", "Time in Bed", "mdi:bed-king", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT, UnitOfTime.MINUTES),
-    UltrahumanMetric("sleep_efficiency", "Sleep Efficiency", "mdi:percent", None, SensorStateClass.MEASUREMENT, PERCENTAGE),
 
     # ---- Recovery & Activity ----
     UltrahumanMetric("recovery_index", "Recovery Index", "mdi:battery-heart-variant", None, SensorStateClass.MEASUREMENT, None),
     UltrahumanMetric("movement_index", "Movement Index", "mdi:run", None, SensorStateClass.MEASUREMENT, None),
     UltrahumanMetric("active_minutes", "Active Minutes", "mdi:timer", SensorDeviceClass.DURATION, SensorStateClass.MEASUREMENT, UnitOfTime.MINUTES),
     UltrahumanMetric("steps", "Steps", "mdi:shoe-print", None, SensorStateClass.TOTAL_INCREASING, "steps"),
-    UltrahumanMetric("calories", "Calories Burned", "mdi:fire", None, SensorStateClass.TOTAL_INCREASING, "kcal"),
 
     # ---- Temperature & Stress ----
     UltrahumanMetric("skin_temp", "Skin Temperature", "mdi:thermometer", SensorDeviceClass.TEMPERATURE, SensorStateClass.MEASUREMENT, UnitOfTemperature.CELSIUS),
-    UltrahumanMetric("temp_deviation", "Temperature Deviation", "mdi:thermometer-alert", SensorDeviceClass.TEMPERATURE, SensorStateClass.MEASUREMENT, UnitOfTemperature.CELSIUS),
-    UltrahumanMetric("stress_score", "Stress Score", "mdi:head-flash", None, SensorStateClass.MEASUREMENT, None),
-
-    # ---- Readiness ----
-    UltrahumanMetric("readiness_score", "Readiness Score", "mdi:gauge", None, SensorStateClass.MEASUREMENT, None),
-    UltrahumanMetric("body_battery", "Body Battery", "mdi:battery-heart", None, SensorStateClass.MEASUREMENT, PERCENTAGE),
-)
+    )
 
 
 class UltrahumanDataParser:
@@ -131,9 +123,6 @@ class UltrahumanDataParser:
         if key == "time_in_bed":
             return sleep.get("time_in_bed", {}).get("minutes")
 
-        if key == "sleep_efficiency":
-            return sleep.get("sleep_efficiency")
-
         # ---- Recovery & Activity ----
         if key == "recovery_index":
             return self._obj("recovery_index").get("value")
@@ -147,24 +136,8 @@ class UltrahumanDataParser:
         if key == "steps":
             return self._obj("steps").get("total")
 
-        if key == "calories":
-            return self._obj("calories").get("total")
-
         # ---- Temperature & Stress ----
         if key == "skin_temp":
-            return self._obj("skin_temperature").get("avg")
-
-        if key == "temp_deviation":
-            return self._obj("skin_temperature").get("deviation")
-
-        if key == "stress_score":
-            return self._obj("stress").get("score")
-
-        # ---- Readiness ----
-        if key == "readiness_score":
-            return self._obj("readiness").get("score")
-
-        if key == "body_battery":
-            return self._obj("body_battery").get("value")
+            return self._obj("skin_temperature").get("last_reading")
 
         return None
