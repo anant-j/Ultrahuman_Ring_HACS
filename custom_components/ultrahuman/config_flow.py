@@ -7,7 +7,7 @@ from datetime import datetime
 DOMAIN = "ultrahuman"
 
 class UltrahumanConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Ultrahuman Sensors."""
+    """Handle a config flow for Ultrahuman Ring Sensors."""
 
     VERSION = 1
 
@@ -18,7 +18,7 @@ class UltrahumanConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Optional: validate API credentials
             if await self._validate_credentials(user_input):
                 return self.async_create_entry(
-                    title="Ultrahuman",
+                    title="Ultrahuman Ring",
                     data=user_input
                 )
             else:

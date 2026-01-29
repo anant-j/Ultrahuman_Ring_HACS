@@ -1,8 +1,8 @@
 {
     "domain": "ultrahuman",
-    "name": "Ultrahuman Sensors",
+    "name": "Ultrahuman Ring",
     "version": "1.0.1",
-    "documentation": "https://github.com/anant-j/Ultrahuman_HACS",
+    "documentation": "https://github.com/anant-j/Ultrahuman_Ring_HACS",
     "requirements": [
         "aiohttp>=3.8.0"
     ],

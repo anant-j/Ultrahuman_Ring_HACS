@@ -55,7 +55,7 @@ async def async_setup_entry(
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
-        name="Ultrahuman",
+        name="Ultrahuman Ring",
         update_method=_fetch,
         update_interval=timedelta(minutes=60),
     )

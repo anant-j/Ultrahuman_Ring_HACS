@@ -1,5 +1,5 @@
 {
-    "name": "Ultrahuman Sensors",
+    "name": "Ultrahuman Ring",
     "content_in_root": false,
     "homeassistant": "2023.9.0",
     "render_readme": true,

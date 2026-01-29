@@ -1,15 +1,15 @@
-"""Ultrahuman integration for Home Assistant."""
+"""Ultrahuman Ring integration for Home Assistant."""
 
 from homeassistant.core import HomeAssistant
 
 DOMAIN = "ultrahuman"
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    """Set up the Ultrahuman integration."""
+    """Set up the Ultrahuman Ring integration."""
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry):
-    """Set up Ultrahuman from a config entry."""
+    """Set up Ultrahuman Ring from a config entry."""
     await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
     return True
 
